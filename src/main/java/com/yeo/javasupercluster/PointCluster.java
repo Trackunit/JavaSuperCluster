@@ -5,6 +5,8 @@
  */
 package com.yeo.javasupercluster;
 
+import java.util.Map;
+
 /**
  *
  * @author yeozkaya@gmail.com
@@ -12,11 +14,18 @@ package com.yeo.javasupercluster;
 public class PointCluster extends MainCluster{
 
 
-    public PointCluster(double x, double y, int zoom, int index, int parentId) {
+    private Map<String, Object> properties;
+
+    public PointCluster(double x, double y, int zoom, int index, int parentId, Map<String, Object> properties) {
+        this.properties = properties;
         this.x = x;
         this.y = y;
         this.zoom = zoom;
         this.index = index;
         this.parentId = parentId;
+    }
+
+    public Map<String, Object> getProperties() {
+        return properties;
     }
 }

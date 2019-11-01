@@ -5,6 +5,8 @@
  */
 package com.yeo.javasupercluster;
 
+import java.util.List;
+
 /**
  *
  * @author yeozkaya@gmail.com
@@ -18,6 +20,12 @@ public class MainCluster {
     protected int parentId;
     protected Integer index;
     protected Integer id;
+
+    protected List<MainCluster> pointsInCluster;
+
+    public List<MainCluster> getPointsInCluster() {
+        return pointsInCluster;
+    }
 
     public double getX() {
         return x;

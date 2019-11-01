@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
+import java.util.stream.Collectors;
+
 import org.wololo.geojson.Feature;
 import org.wololo.geojson.Point;
 
@@ -100,7 +102,12 @@ public class SuperCluster {
                 clusters.add(p);
             } else {
                 p.setParentId(id);
-                clusters.add(createCluster(wx / numPoints, wy / numPoints, id, numPoints));
+
+                List<MainCluster> pointsInCluster = tree.getPoints().stream()
+                        .filter(pt -> pt.getParentId() == id)
+                        .collect(Collectors.toList());
+
+                clusters.add(createCluster(wx / numPoints, wy / numPoints, id, numPoints, pointsInCluster));
             }
         }
 
@@ -167,11 +174,11 @@ public class SuperCluster {
         double x = lngX(p.getCoordinates()[0]);
         double y = latY(p.getCoordinates()[1]);
 
-        return new PointCluster(x, y, 24, id, -1);
+        return new PointCluster(x, y, 24, id, -1, feature.getProperties());
     }
 
-    private Cluster createCluster(double x, double y, int id, int numPoints) {
-        return new Cluster(x, y, id, numPoints);
+    private Cluster createCluster(double x, double y, int id, int numPoints, List<MainCluster> pointsInCluster) {
+        return new Cluster(x, y, id, numPoints, pointsInCluster);
     }
 
     private double lngX(double lng) {
@@ -302,7 +309,11 @@ public class SuperCluster {
 
     private Map getClusterProperties(MainCluster cluster) {
         int count = cluster.numPoints;
-        String abbrev = (count >= 1000000) ? ((Math.round(count / 1000000)) + "M") : (count >= 10000) ? ((Math.round(count / 1000)) + "K") : ((count >= 1000) ? ((Math.round(count / 100) / 10) + "K") : count + "");
+        String abbrev = (count >= 1000000) ?
+                ((Math.round(count / 1000000)) + "M") :
+                (count >= 10000) ?
+                        ((Math.round(count / 1000)) + "K") :
+                        ((count >= 1000) ? ((Math.round(count / 100) / 10) + "K") : count + "");
 
         Map<String, Object> properties = new HashMap();
 
@@ -310,6 +321,7 @@ public class SuperCluster {
         properties.put("cluster_id", cluster.getId());
         properties.put("point_count", count);
         properties.put("point_count_abbreviated", abbrev);
+        properties.put("points_in_cluster", cluster.getPointsInCluster());
 
         return properties;
 
