@@ -29,6 +29,8 @@ public class SuperCluster {
     private final Feature[] points;
     private final KDBush[] trees;
 
+    private Map<Integer, ArrayList<MainCluster>> pointsByParentId = new HashMap<>();;
+
     public SuperCluster(int radius, int extent, int minzoom, int maxzoom, int nodesize,  Feature[] clusterpoints) {
 
         this.radius = radius;
@@ -52,7 +54,6 @@ public class SuperCluster {
             clusters = this._cluster(clusters, z);
             this.trees[z] = new KDBush(clusters, nodeSize);
         }
-
     }
 
     private List<MainCluster> _cluster(List<MainCluster> points, int zoom) {
@@ -96,6 +97,9 @@ public class SuperCluster {
 
                 numPoints += numPoints2;
                 b.setParentId(id);
+
+                pointsByParentId.putIfAbsent(id, new ArrayList<>());
+                pointsByParentId.get(id).add(b);
             }
 
             if (numPoints == 1) {
@@ -103,7 +107,10 @@ public class SuperCluster {
             } else {
                 p.setParentId(id);
 
-                List<MainCluster> pointsInCluster = tree.getPointsForParentId(id);
+                pointsByParentId.putIfAbsent(id, new ArrayList<>());
+                pointsByParentId.get(id).add(p);
+
+                List<MainCluster> pointsInCluster = pointsByParentId.get(id);
 
                 clusters.add(createCluster(wx / numPoints, wy / numPoints, id, numPoints, pointsInCluster));
             }
