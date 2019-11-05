@@ -5,10 +5,12 @@
  */
 package com.yeo.javasupercluster;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
- *
  * @author yeozkaya@gmail.com
  */
 public class KDBush {
@@ -17,10 +19,13 @@ public class KDBush {
     private int[] ids;
     private int nodeSize;
     private List<MainCluster> points;
+    private Map<Integer, ArrayList<MainCluster>> pointsByParentId;
 
     public KDBush(List<MainCluster> points, int nodeSize) {
         this.nodeSize = nodeSize;
         this.points = points;
+
+        buildPointsMap();
 
         this.ids = new int[points.size()];
         this.coords = new double[points.size() * 2];
@@ -31,6 +36,15 @@ public class KDBush {
             coords[2 * i + 1] = points.get(i).getY();
         }
         sortKD(ids, coords, nodeSize, 0, ids.length - 1, 0);
+    }
+
+    private void buildPointsMap() {
+        pointsByParentId = new HashMap<>(points.size());
+
+        this.points.forEach(p -> {
+            pointsByParentId.putIfAbsent(p.getParentId(), new ArrayList<>());
+            pointsByParentId.get(p.getParentId()).add(p);
+        });
     }
 
     private void sortKD(int[] ids, double[] coords, int nodeSize, int left, int right, int depth) {
@@ -143,8 +157,7 @@ public class KDBush {
         return points;
     }
 
-    public void setPoints(List<MainCluster> points) {
-        this.points = points;
+    public List<MainCluster> getPointsForParentId(int parentId) {
+        return pointsByParentId.get(parentId);
     }
-    
 }

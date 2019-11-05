@@ -103,9 +103,7 @@ public class SuperCluster {
             } else {
                 p.setParentId(id);
 
-                List<MainCluster> pointsInCluster = tree.getPoints().stream()
-                        .filter(pt -> pt.getParentId() == id)
-                        .collect(Collectors.toList());
+                List<MainCluster> pointsInCluster = tree.getPointsForParentId(id);
 
                 clusters.add(createCluster(wx / numPoints, wy / numPoints, id, numPoints, pointsInCluster));
             }
