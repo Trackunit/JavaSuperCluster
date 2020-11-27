@@ -50,9 +50,9 @@
     </repositories>
 
     <scm>
-        <url>https://github.com/Safetrack/JavaSuperCluster/</url>
-        <connection>scm:git:https://github.com/Safetrack/JavaSuperCluster.git</connection>
-        <developerConnection>scm:git:https://github.com/Safetrack/JavaSuperCluster.git</developerConnection>
+        <url>https://github.com/Trackunit/JavaSuperCluster/</url>
+        <connection>scm:git:https://github.com/Trackunit/JavaSuperCluster.git</connection>
+        <developerConnection>scm:git:https://github.com/Trackunit/JavaSuperCluster.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
 
